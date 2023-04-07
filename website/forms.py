@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Task
 from django import forms
 
 
@@ -37,3 +38,27 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].label = ''
         self.fields[
             'password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+
+
+class TaskCreationForm(forms.ModelForm):
+    work_status = [
+        ("Dn", "Done"),
+        ("Pr", "In Progress"),
+        ("Pn", "Pending"),
+    ]
+
+    title = forms.CharField(required=True, widget=forms.widgets.TextInput(
+        attrs={"placeholder": "title", "class": "form-control"}), label="")
+
+    link = forms.CharField(required=True, widget=forms.widgets.TextInput(
+        attrs={"placeholder": "task link", "class": "form-control"}), label="")
+
+    status = forms.ChoiceField(required=True, choices=work_status,
+                                label="")
+
+    resources = forms.CharField(required=True, widget=forms.widgets.TextInput(
+        attrs={"placeholder": "Task Related Resources", "class": "form-control"}), label="")
+
+    class Meta:
+        model = Task
+        exclude = ("user",)
