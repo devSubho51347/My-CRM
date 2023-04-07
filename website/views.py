@@ -3,14 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm,TaskCreationForm
-from .models import Task
+from .models import Tasker
 
 
 # Create your views here.
 
 # Create a homepage view
 def home(request):
-    tasks = Task.objects.all()
+    tasks = Tasker.objects.all()
     if request.method == 'POST':
         username = request.POST["username"]
         password = request.POST["password"]
@@ -62,7 +62,7 @@ def register_user(request):
 # Method to delete a task form the Task model
 @login_required
 def delete_task(request, pk):
-    task = Task.objects.get(id=pk)
+    task = Tasker.objects.get(id=pk)
     task.delete()
     messages.success(request, "Record Deleted Successfully...")
     return redirect('home')
@@ -85,4 +85,10 @@ def add_task(request):
 ##Method to Update an existing task
 @login_required
 def update_task(request, pk):
-    pass
+    current_record = Tasker.objects.get(id=pk)
+    form = TaskCreationForm(request.POST or None, instance=current_record)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Record Has Been Updated!")
+        return redirect('home')
+    return render(request, 'update_task.html', {'form': form})

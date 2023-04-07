@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Task
+from .models import Tasker
 from django import forms
 
 
@@ -42,9 +42,9 @@ class SignUpForm(UserCreationForm):
 
 class TaskCreationForm(forms.ModelForm):
     work_status = [
-        ("Dn", "Done"),
-        ("Pr", "In Progress"),
-        ("Pn", "Pending"),
+        ("Done", "Done"),
+        ("In Progress", "In Progress"),
+        ("Pending", "Pending"),
     ]
 
     title = forms.CharField(required=True, widget=forms.widgets.TextInput(
@@ -60,5 +60,5 @@ class TaskCreationForm(forms.ModelForm):
         attrs={"placeholder": "Task Related Resources", "class": "form-control"}), label="")
 
     class Meta:
-        model = Task
+        model = Tasker
         exclude = ("user",)
